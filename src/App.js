@@ -7,6 +7,7 @@ import GlobalStyle from "./styles/global";
 
 import Home from "./components/Home";
 import Header from "./components/Header";
+import Login from "./components/Login";
 
 const App = () => {
   const [firebaseInitialized, setFirebaseInitialized] = useState(false);
@@ -23,6 +24,7 @@ const App = () => {
       <Header />
       <Switch>
         <Route exact path="/" component={Home} />
+        <Route exact path="/login" component={Login} />
       </Switch>
     </BrowserRouter>
   ) : (

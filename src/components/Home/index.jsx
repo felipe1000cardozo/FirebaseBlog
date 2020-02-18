@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import firebase from "../../firebase";
+import { Post } from "./style";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -23,7 +24,7 @@ const Home = () => {
   }, []);
 
   return (
-    <section>
+    <Post>
       {posts.map(post => {
         return (
           <article key={post.key}>
@@ -40,7 +41,7 @@ const Home = () => {
           </article>
         );
       })}
-    </section>
+    </Post>
   );
 };
 
