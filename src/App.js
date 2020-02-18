@@ -8,6 +8,8 @@ import GlobalStyle from "./styles/global";
 import Home from "./components/Home";
 import Header from "./components/Header";
 import Login from "./components/Login";
+import Register from "./components/Register";
+import Dashboard from "./components/Dashboard";
 
 const App = () => {
   const [firebaseInitialized, setFirebaseInitialized] = useState(false);
@@ -25,6 +27,8 @@ const App = () => {
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/register" component={Register} />
+        <Route exact path="/dashboard" component={Dashboard} />
       </Switch>
     </BrowserRouter>
   ) : (

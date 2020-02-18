@@ -1,20 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, withRouter } from "react-router-dom";
 import firebase from "../../firebase";
 
 import { StyledLogin } from "./style";
 
-const Login = () => {
+const Login = props => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    if (firebase.getCurrent()) {
+      return props.history.replace("dashboard");
+    }
+  }, []);
+
   function entrar(e) {
     e.preventDefault();
+    login();
   }
 
   async function login() {
     try {
-      await firebase.login(email, password).cath(error => {
+      await firebase.login(email, password).catch(error => {
         if (error.code === "auth/user-not-fount") {
           alert("Este usuario não exite!");
         } else {
@@ -22,7 +29,9 @@ const Login = () => {
           return null;
         }
       });
+      props.history.replace("/dashboard");
     } catch (error) {
+      console.log(error);
       alert(error.message);
     }
   }
@@ -42,6 +51,7 @@ const Login = () => {
 
         <label>Senha:</label>
         <input
+          autoComplete="on"
           type="password"
           value={password}
           onChange={e => setPassword(e.target.value)}

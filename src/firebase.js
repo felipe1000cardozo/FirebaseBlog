@@ -21,7 +21,7 @@ class Firebase {
     this.app = app.database();
   }
 
-  login(nome, email, password) {
+  login(email, password) {
     return app.auth().signInWithEmailAndPassword(email, password);
   }
 
@@ -43,6 +43,10 @@ class Firebase {
     return new Promise(resolve => {
       app.auth().onAuthStateChanged(resolve);
     });
+  }
+
+  getCurrent() {
+    return app.auth().currentUser && app.auth().currentUser.email;
   }
 }
 
