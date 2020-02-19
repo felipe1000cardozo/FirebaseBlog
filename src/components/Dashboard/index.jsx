@@ -1,11 +1,39 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link, withRouter } from "react-router-dom";
+import firebase from "../../firebase";
 
-const Dashboard = () => {
+const Dashboard = props => {
+  const [nome, setNome] = useState(localStorage.userName);
+  const [userEmail, setUserEmail] = useState("");
+
+  function logout() {}
+
+  useEffect(() => {
+    async function getLoginStatus() {
+      if (!firebase.getCurrent()) {
+        props.history.replace("/login");
+        return null;
+      }
+
+      firebase.getUserName(info => {
+        localStorage.userName = info.val().nome;
+        setNome(localStorage.userName);
+      });
+    }
+
+    getLoginStatus();
+  }, []);
+
   return (
     <div>
-      <h1>tela dashboard</h1>
+      <div>
+        <h1>Ola {nome}</h1>
+        <Link to="/dashboard/new">Novo Post</Link>
+      </div>
+      <p>Logado com {userEmail}</p>
+      <button onClick={() => logout()}>Deslogar</button>
     </div>
   );
 };
 
-export default Dashboard;
+export default withRouter(Dashboard);
