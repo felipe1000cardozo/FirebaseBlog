@@ -1,11 +1,60 @@
-import React from "react";
+import React, { useState } from "react";
+import firebase from "../../firebase";
+import { Link, withRouter } from "react-router-dom";
 
-const Register = () => {
+import { RegisterForm, RegisterTitle } from "./style";
+
+const Register = props => {
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function register(e) {
+    e.preventDefault();
+
+    onRegister();
+  }
+
+  async function onRegister() {
+    try {
+      await firebase.register(nome, email, password);
+      props.history.replace("/dashboard");
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
   return (
     <div>
-      <h1>tela register</h1>
+      <RegisterTitle>Novo Usuario</RegisterTitle>
+      <RegisterForm onSubmit={register}>
+        <label>Nome:</label>
+        <input
+          type="text"
+          value={nome}
+          autoFocus
+          autoComplete="on"
+          onChange={e => setNome(e.target.value)}
+        />
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}
+          autoComplete="on"
+          onChange={e => setEmail(e.target.value)}
+        />
+        <label>Senha:</label>
+        <input
+          type="password"
+          value={password}
+          autoComplete="on"
+          onChange={e => setPassword(e.target.value)}
+        />
+
+        <button type="submit">Cadastrar</button>
+      </RegisterForm>
     </div>
   );
 };
 
-export default Register;
+export default withRouter(Register);
