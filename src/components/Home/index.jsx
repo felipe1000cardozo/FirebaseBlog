@@ -19,7 +19,7 @@ const Home = () => {
         });
       });
 
-      setPosts(newPosts);
+      setPosts(newPosts.reverse());
     });
   }, []);
 

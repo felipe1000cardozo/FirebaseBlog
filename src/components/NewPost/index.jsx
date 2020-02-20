@@ -1,17 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, withRouter } from "react-router-dom";
+import firebase from "../../firebase";
 
-const NewPost = () => {
+import { New } from "./style";
+
+const NewPost = props => {
   const [titulo, setTitulo] = useState("");
   const [imagem, setImagem] = useState("");
   const [descricao, setDescricao] = useState("");
+  const [alert, setAlert] = useState("");
+
+  useEffect(() => {
+    if (!firebase.getCurrent()) {
+      props.history.replace("/");
+      return null;
+    }
+  }, []);
+
+  async function cadastrar(e) {
+    e.preventDefault();
+
+    if (titulo !== "" && imagem !== "" && descricao !== "") {
+      let posts = firebase.app.ref("posts");
+      let chave = posts.push().key;
+      await posts.child(chave).set({
+        titulo,
+        imagem,
+        descricao,
+        autor: localStorage.userName
+      });
+
+      props.history.push("/dashboard");
+    } else {
+      setAlert("Preencha todos os campos");
+    }
+  }
 
   return (
-    <div>
+    <New>
       <header>
-        <Link></Link>
+        <Link to="/dashboard">Voltar</Link>
       </header>
-      <form action="">
+      <form onSubmit={cadastrar}>
+        <span>{alert}</span>
         <label>Titulo:</label>
         <input
           type="text"
@@ -35,9 +66,9 @@ const NewPost = () => {
           autofocus
           onChange={e => setDescricao(e.target.value)}
         />
-        <button type="submit"></button>
+        <button type="submit">Cadastrar</button>
       </form>
-    </div>
+    </New>
   );
 };
 
