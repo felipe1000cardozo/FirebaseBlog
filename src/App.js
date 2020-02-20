@@ -10,6 +10,7 @@ import Header from "./components/Header";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
+import NewPost from "./components/NewPost";
 
 const App = () => {
   const [firebaseInitialized, setFirebaseInitialized] = useState(false);
@@ -29,6 +30,7 @@ const App = () => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/dashboard" component={Dashboard} />
+        <Route exact path="/dashboard/new" component={NewPost} />
       </Switch>
     </BrowserRouter>
   ) : (

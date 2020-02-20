@@ -2,11 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Link, withRouter } from "react-router-dom";
 import firebase from "../../firebase";
 
+import { StyledDashboard } from "./style";
+
 const Dashboard = props => {
   const [nome, setNome] = useState(localStorage.userName);
-  const [userEmail, setUserEmail] = useState("");
 
-  function logout() {}
+  async function logout() {
+    await firebase.logout().catch(error => console.log(error));
+    localStorage.removeItem("userName");
+    props.history.push("/");
+  }
 
   useEffect(() => {
     async function getLoginStatus() {
@@ -22,17 +27,18 @@ const Dashboard = props => {
     }
 
     getLoginStatus();
+    // eslint-disable-next-line
   }, []);
 
   return (
-    <div>
-      <div>
+    <StyledDashboard>
+      <div className="user-info">
         <h1>Ola {nome}</h1>
         <Link to="/dashboard/new">Novo Post</Link>
       </div>
-      <p>Logado com {userEmail}</p>
+      <p>Logado com {firebase.getCurrent()}</p>
       <button onClick={() => logout()}>Deslogar</button>
-    </div>
+    </StyledDashboard>
   );
 };
 

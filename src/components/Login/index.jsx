@@ -12,6 +12,7 @@ const Login = props => {
     if (firebase.getCurrent()) {
       return props.history.replace("dashboard");
     }
+    // eslint-disable-next-line
   }, []);
 
   function entrar(e) {

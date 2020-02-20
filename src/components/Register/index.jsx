@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import firebase from "../../firebase";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import { RegisterForm, RegisterTitle } from "./style";
 
@@ -33,21 +33,21 @@ const Register = props => {
           type="text"
           value={nome}
           autoFocus
-          autoComplete="on"
+          autoComplete="off"
           onChange={e => setNome(e.target.value)}
         />
         <label>Email:</label>
         <input
           type="email"
           value={email}
-          autoComplete="on"
+          autoComplete="off"
           onChange={e => setEmail(e.target.value)}
         />
         <label>Senha:</label>
         <input
           type="password"
           value={password}
-          autoComplete="on"
+          autoComplete="off"
           onChange={e => setPassword(e.target.value)}
         />
 
