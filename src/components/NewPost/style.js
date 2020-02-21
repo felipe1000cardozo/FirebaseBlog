@@ -40,6 +40,24 @@ export const New = styled.main`
       border: 1px solid #ddd;
       padding: 0 20px;
     }
+    input[type="file"] {
+      border: 0;
+      height: fit-content;
+      margin-bottom: 10px;
+      padding: 0;
+    }
+    .input-file {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ddd;
+      padding: 10px;
+      img {
+        margin: 10px;
+        width: 200px;
+        height: 100px;
+      }
+    }
     label {
       margin-bottom: 8px;
     }
@@ -48,6 +66,7 @@ export const New = styled.main`
       border-radius: 5px;
       border: 1px solid #ddd;
       padding: 0 20px;
+      resize: vertical;
     }
     button {
       margin-top: 10px;

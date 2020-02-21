@@ -6,9 +6,11 @@ import { New } from "./style";
 
 const NewPost = props => {
   const [titulo, setTitulo] = useState("");
-  const [imagem, setImagem] = useState("");
+  const [imagem, setImagem] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
   const [descricao, setDescricao] = useState("");
   const [alert, setAlert] = useState("");
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (!firebase.getCurrent()) {
@@ -20,12 +22,17 @@ const NewPost = props => {
   async function cadastrar(e) {
     e.preventDefault();
 
-    if (titulo !== "" && imagem !== "" && descricao !== "") {
+    if (
+      titulo !== "" &&
+      imagem !== null &&
+      descricao !== "" &&
+      imageUrl !== ""
+    ) {
       let posts = firebase.app.ref("posts");
       let chave = posts.push().key;
       await posts.child(chave).set({
         titulo,
-        imagem,
+        imagem: imageUrl,
         descricao,
         autor: localStorage.userName
       });
@@ -36,6 +43,59 @@ const NewPost = props => {
     }
   }
 
+  const handleFile = async e => {
+    if (e.target.files[0]) {
+      const image = e.target.files[0];
+
+      if (image.type === "image/png" || image.type === "image/jpeg") {
+        setImagem(image);
+        //console.log(imagem);
+        setAlert("");
+      } else {
+        setAlert("Envie uma imagem do tipo PNG ou JPEG");
+        setImagem(null);
+        return null;
+      }
+    }
+  };
+
+  async function handleUpload() {
+    if (imagem) {
+      const currentUid = firebase.getCurrentUid();
+      const uploadTasks = firebase.storage
+        .ref(`images/${currentUid}/${imagem.name}`)
+        .put(imagem);
+
+      await uploadTasks.on(
+        "state_changed",
+        snapshot => {
+          //progress
+          setProgress(
+            Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+          );
+        },
+        error => {
+          //error
+          console.log("Error imagem" + error);
+        },
+        () => {
+          //sucesso
+          firebase.storage
+            .ref(`images/${currentUid}`)
+            .child(imagem.name)
+            .getDownloadURL()
+            .then(url => {
+              setImageUrl(url);
+            });
+        }
+      );
+    }
+  }
+
+  useEffect(() => {
+    handleUpload();
+  }, [imagem]);
+
   return (
     <New>
       <header>
@@ -43,27 +103,29 @@ const NewPost = props => {
       </header>
       <form onSubmit={cadastrar}>
         <span>{alert}</span>
+        <div className="input-file">
+          <input type="file" onChange={handleFile} />
+          {imageUrl ? (
+            <img src={imageUrl} width="250" height="150" alt="Capa do post" />
+          ) : (
+            <progress value={progress} max="100" />
+          )}
+        </div>
         <label>Titulo:</label>
         <input
           type="text"
           placeholder="Nome do post"
           value={titulo}
-          autofocus
+          autoFocus
           onChange={e => setTitulo(e.target.value)}
         />
         <label>Url da imagem:</label>
-        <input
-          type="text"
-          placeholder="Url da capa"
-          value={imagem}
-          onChange={e => setImagem(e.target.value)}
-        />
         <label>Descrição:</label>
         <textarea
           type="text"
           placeholder="Nome do post"
           value={descricao}
-          autofocus
+          autoFocus
           onChange={e => setDescricao(e.target.value)}
         />
         <button type="submit">Cadastrar</button>

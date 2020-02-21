@@ -26,6 +26,7 @@ export const Post = styled.section`
     }
     img {
       width: 100%;
+      height: 539px;
     }
     footer {
       padding: 20px;

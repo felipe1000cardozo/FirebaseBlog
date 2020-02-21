@@ -19,6 +19,7 @@ class Firebase {
     app.initializeApp(firebaseConfig);
 
     this.app = app.database();
+    this.storage = app.storage();
   }
 
   login(email, password) {
@@ -51,6 +52,10 @@ class Firebase {
 
   getCurrent() {
     return app.auth().currentUser && app.auth().currentUser.email;
+  }
+
+  getCurrentUid() {
+    return app.auth().currentUser && app.auth().currentUser.uid;
   }
 
   async getUserName(callback) {
